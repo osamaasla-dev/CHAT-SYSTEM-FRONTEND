@@ -1,26 +1,20 @@
-import { useState } from "react";
+import { Routes, Route } from "react-router-dom";
+import { routes, type RouteContent } from "./routes";
 
-function App() {
-  const [count, setCount] = useState(0);
+function renderRoutes(routeArray: RouteContent[]) {
+  return routeArray.map(({ key, index, path, Element, children }) => {
+    if (index) {
+      return <Route key={key} index element={<Element />} />;
+    }
 
-  return (
-    <>
-      <div>
-        <h1>Vite + React</h1>
-        <div className="card">
-          <button onClick={() => setCount((count) => count + 1)}>
-            count is {count}
-          </button>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test HMR
-          </p>
-        </div>
-        <p className="read-the-docs">
-          Click on the Vite and React logos to learn more
-        </p>
-      </div>
-    </>
-  );
+    return (
+      <Route key={key} path={path} element={<Element />}>
+        {children && renderRoutes(children)}
+      </Route>
+    );
+  });
 }
 
-export default App;
+export default function App() {
+  return <Routes>{renderRoutes(routes)}</Routes>;
+}
