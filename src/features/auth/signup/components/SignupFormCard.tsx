@@ -45,6 +45,7 @@ export function SignupFormCard({ className }: SignupFormCardProps) {
           variant="submit"
           disabled={isBusy || !isValid}
           data-testid="signup-submit"
+          className="w-full"
           aria-disabled={isBusy || !isValid}
           aria-live="polite"
         >

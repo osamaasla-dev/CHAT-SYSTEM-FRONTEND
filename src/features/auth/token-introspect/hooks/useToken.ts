@@ -25,8 +25,10 @@ export function useToken() {
         navigate("/", { replace: true });
       }
     },
-    onError: () => {
-      navigate("/login", { replace: true });
+    onError: (error) => {
+      if (error.statusCode === 401) {
+        navigate("/login", { replace: true });
+      }
     },
   });
 }

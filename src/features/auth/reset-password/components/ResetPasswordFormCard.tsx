@@ -40,6 +40,7 @@ export function ResetPasswordFormCard({ token }: ResetPasswordFormCardProps) {
             <Button
               type="submit"
               variant="submit"
+              className="w-full"
               disabled={!isValid || isPending}
               aria-live="polite"
             >

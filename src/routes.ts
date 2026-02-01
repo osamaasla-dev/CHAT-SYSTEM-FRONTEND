@@ -8,6 +8,7 @@ import {
   ResetPasswordInfoPage,
 } from "./features/auth";
 import { AppPage } from "./features/app";
+import { Test } from "./Test";
 
 export interface RouteContent {
   key: string;
@@ -18,6 +19,11 @@ export interface RouteContent {
 }
 
 export const routes: RouteContent[] = [
+  {
+    key: "/test",
+    path: "/test",
+    Element: Test,
+  },
   {
     key: "/",
     path: "/",

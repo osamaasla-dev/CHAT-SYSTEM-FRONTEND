@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
-import type { SignupPayload } from "../schemas";
+import type { SignupSchema } from "../schemas";
 import type { ApiSuccessResponse, ApiErrorResponse } from "@/shared/lib/api";
 import { signupApi } from "../services";
 import { signupMessages } from "../messages";
@@ -11,9 +11,9 @@ export const SIGNUP_MUTATION_KEY = ["auth", "signup"] as const;
 
 export function useSignup() {
   return useMutation<
-    ApiSuccessResponse<SignupPayload>,
+    ApiSuccessResponse<SignupSchema>,
     ApiErrorResponse,
-    SignupPayload
+    SignupSchema
   >({
     mutationKey: SIGNUP_MUTATION_KEY,
     mutationFn: signupApi,

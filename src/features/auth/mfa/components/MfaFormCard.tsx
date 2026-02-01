@@ -71,6 +71,7 @@ export function MfaFormCard({ className }: MfaFormCardProps) {
             type="submit"
             variant="submit"
             disabled={!isValid || isBusy}
+            className="w-full"
             aria-live="polite"
           >
             {isVerifying ? "Verifying…" : "Verify & continue"}

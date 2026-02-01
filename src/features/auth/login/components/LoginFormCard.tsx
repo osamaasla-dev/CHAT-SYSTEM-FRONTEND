@@ -76,6 +76,7 @@ export function LoginFormCard({ className }: LoginFormCardProps) {
             variant="submit"
             disabled={isBusy || !isValid}
             data-testid="login-submit"
+            className="w-full"
             aria-disabled={isBusy || !isValid}
             aria-live="polite"
           >

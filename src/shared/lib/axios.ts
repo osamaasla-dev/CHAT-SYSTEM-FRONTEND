@@ -60,13 +60,19 @@ const normalizeAxiosError = (error: AxiosError): NormalizedError => {
       }
     }
 
+    const normalizedMessage =
+      statusCode === 429
+        ? "Too many attempts, please try again later"
+        : typeof message === "string" && message === "FAILED"
+          ? "Something went wrong, please try again later"
+          : message ||
+            error.response.statusText ||
+            `Request failed with status ${statusCode}`;
+
     return {
       status: "error",
       statusCode,
-      message:
-        message ||
-        error.response.statusText ||
-        `Request failed with status ${statusCode}`,
+      message: normalizedMessage,
     };
   }
 

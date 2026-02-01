@@ -30,11 +30,4 @@ export const formFields: FieldConfig[] = [
     type: "password",
     autoComplete: "new-password",
   },
-  {
-    name: "confirmPassword",
-    label: "Confirm password",
-    placeholder: "Re-enter your password",
-    type: "password",
-    autoComplete: "new-password",
-  },
 ];

@@ -1,5 +1,5 @@
 import { apiPost } from "@/shared/lib/api";
-import type { SignupPayload } from "../schemas";
+import type { SignupSchema } from "../schemas";
 
-export const signupApi = async (payload: SignupPayload) =>
-  await apiPost<SignupPayload>("/auth/signup", payload);
+export const signupApi = async (payload: SignupSchema) =>
+  await apiPost<SignupSchema>("/auth/signup", payload);
