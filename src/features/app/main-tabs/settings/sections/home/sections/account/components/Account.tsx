@@ -10,9 +10,9 @@ export const AccountSettings = ({ push }: SettingsScreenProps) => {
           key={section.label}
           type="button"
           onClick={() => push(section.route)}
-          className="cursor-pointer flex gap-2 w-full items-center rounded-xl bg-white p-4 transition hover:bg-secondary"
+          className="border-b border-gray-light cursor-pointer flex gap-2 w-full items-center rounded-xl bg-white p-4 transition hover:bg-secondary"
         >
-          <section.Icon className="size-5 text-primary" />
+          {section.Icon && <section.Icon className="size-5 text-primary" />}
           <span className="text-primary">{section.label}</span>
           <ArrowRight className="size-5 text-primary ml-auto" />
         </button>

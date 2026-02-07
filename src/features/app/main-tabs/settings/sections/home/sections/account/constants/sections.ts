@@ -1,5 +1,5 @@
 import { Lock, Mail, ShieldAlert } from "lucide-react";
-import type { Section } from "@/features/app/main-tabs/settings/constants";
+import type { Section } from "@/features/app/main-tabs/settings/types";
 
 export const acountSections: Section[] = [
   {

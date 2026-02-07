@@ -1,23 +1,34 @@
-import { UserRound, MessageCircleMore, Settings } from "lucide-react";
+import {
+  Search,
+  UserRound,
+  MessageCircleMore,
+  Settings,
+  Users,
+} from "lucide-react";
 
 import { useCheckToken } from "@/features/auth/token-introspect/hooks";
 import { SpinnerLayer } from "@/shared/components";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/shared/components";
 import { ErrorState } from "@/shared/components";
 import { resolveApiErrorMessage } from "@/shared/utils";
-import { MyProfileTab, useMyProfile } from "../main-tabs/my-profile";
 import { useState } from "react";
-import { MainSection } from "../main-tabs/main-section";
-import { SettingsTab } from "../main-tabs/settings";
+import {
+  useMyProfile,
+  SearchTab,
+  SettingsTab,
+  MyProfileTab,
+  MainSection,
+  ContactsTab,
+  ChatsTab,
+} from "../main-tabs";
+import type { MainTabKey } from "../types/main-tabs.types";
 
 export const AppPage = () => {
   const { isPending, error } = useCheckToken();
 
   const { data, error: profileError, isLoading } = useMyProfile();
 
-  const [selectedTab, setSelectedTab] = useState<
-    "chats" | "settings" | "my-profile"
-  >("chats");
+  const [selectedTab, setSelectedTab] = useState<MainTabKey>("chats");
 
   if (isPending) {
     return <SpinnerLayer />;
@@ -35,11 +46,11 @@ export const AppPage = () => {
 
   return (
     <div className="flex h-screen min-h-[620px] bg-secondary text-primary-dark">
-      <section className="flex w-full flex-col border-r-2 border-gray-light bg-light shadow-lg lg:w-1/3">
+      <section className="w-full">
         <Tabs
           defaultValue="chats"
           orientation="vertical"
-          className="flex h-full gap-0"
+          className=" h-full gap-0"
         >
           <TabsList className="flex h-full w-15 flex-col items-center gap-4 rounded-none border-r-2 border-gray-light bg-secondary py-4">
             <TabsTrigger
@@ -49,6 +60,24 @@ export const AppPage = () => {
             >
               <span className=" block rounded-full p-2">
                 <MessageCircleMore className="size-6  text-primary" />
+              </span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="contacts"
+              onClick={() => setSelectedTab("contacts")}
+              className="cursor-pointer rounded-full hover:bg-light data-[state=active]:bg-light"
+            >
+              <span className=" block rounded-full p-2">
+                <Users className="size-6  text-primary" />
+              </span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="search"
+              onClick={() => setSelectedTab("search")}
+              className="cursor-pointer rounded-full hover:bg-light data-[state=active]:bg-light"
+            >
+              <span className="block rounded-full p-2">
+                <Search className="size-6 text-primary" />
               </span>
             </TabsTrigger>
             <TabsTrigger
@@ -77,37 +106,43 @@ export const AppPage = () => {
             </TabsTrigger>
           </TabsList>
 
-          <div className="flex flex-1 flex-col  bg-light p-4 mb-4 overflow-y-auto">
-            <TabsContent value="chats" className="flex flex-1 flex-col gap-6">
-              <div className="text-end">
-                <p className="text-sm text-muted-foreground">الدردشات</p>
-                <h1 className="text-2xl font-semibold text-primary-dark">
-                  كل المحادثات
-                </h1>
-              </div>
-              <p className="text-base text-primary-dark/80">
-                سيتم إظهار قائمة الدردشات الخاصة بك هنا مع آخر الرسائل والوقت.
-              </p>
-            </TabsContent>
+          <div className="flex flex-1">
+            <div className="bg-light border-r-2 border-gray-light w-1/3 flex flex-col gap-6 p-3">
+              <TabsContent value="chats" className="flex flex-1 flex-col gap-6">
+                <ChatsTab />
+              </TabsContent>
+              <TabsContent
+                value="contacts"
+                className="flex flex-1 flex-col gap-6 overflow-y-auto"
+              >
+                <ContactsTab />
+              </TabsContent>
 
-            <TabsContent
-              value="settings"
-              className="flex flex-1 flex-col gap-6 overflow-y-auto"
-            >
-              <SettingsTab />
-            </TabsContent>
+              <TabsContent
+                value="search"
+                className="flex flex-1 flex-col gap-6 overflow-y-auto"
+              >
+                <SearchTab />
+              </TabsContent>
+              <TabsContent
+                value="settings"
+                className="flex flex-1 flex-col gap-6 overflow-y-auto"
+              >
+                <SettingsTab />
+              </TabsContent>
 
-            <TabsContent
-              value="my-profile"
-              className="flex flex-1 flex-col gap-6"
-            >
-              <MyProfileTab data={data} isLoading={isLoading} error={error} />
-            </TabsContent>
+              <TabsContent
+                value="my-profile"
+                className="flex flex-1 flex-col gap-6"
+              >
+                <MyProfileTab data={data} isLoading={isLoading} error={error} />
+              </TabsContent>
+            </div>
+
+            <MainSection tab={selectedTab} className="w-2/3" />
           </div>
         </Tabs>
       </section>
-
-      <MainSection tab={selectedTab} />
     </div>
   );
 };

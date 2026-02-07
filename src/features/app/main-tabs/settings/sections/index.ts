@@ -1,5 +1,11 @@
 export { HomeSettings } from "./home";
 export { AccountSettings } from "./home/sections";
+export { PrivacySettings } from "./home/sections";
+export { ProfileAvatar } from "./home/sections/privacy/sections";
+export { DirectMessages } from "./home/sections/privacy/sections";
+export { UsernameSearch } from "./home/sections/privacy/sections";
+export { BlockedContacts } from "./home/sections/privacy/sections";
 export { EmailSettings } from "./home/sections/account/sections";
 export { PasswordSettings } from "./home/sections/account/sections";
 export { AccountStatusSettings } from "./home/sections/account/sections";
+export { NotificationsSettings } from "./home/sections/notifications";

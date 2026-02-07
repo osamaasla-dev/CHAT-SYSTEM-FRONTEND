@@ -5,7 +5,7 @@ import { useSettingsNavigation } from "../hooks-ui";
 import { routeTitles, screensMap, slideVariants } from "../constants";
 
 export const SettingsTab = () => {
-  const { currentRoute, direction, canGoBack, pop, push, stack } =
+  const { currentRoute, direction, canGoBack, pop, push } =
     useSettingsNavigation();
   const CurrentScreen = useMemo(() => screensMap[currentRoute], [currentRoute]);
 
@@ -37,7 +37,7 @@ export const SettingsTab = () => {
           </header>
 
           <div className="mt-7 flex-1 overflow-auto border-t border-gray-light pt-2">
-            <CurrentScreen push={push} pop={pop} stack={stack} />
+            <CurrentScreen push={push} />
           </div>
         </motion.div>
       </AnimatePresence>

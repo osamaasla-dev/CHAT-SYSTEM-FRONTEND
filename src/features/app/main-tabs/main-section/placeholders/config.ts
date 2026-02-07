@@ -1,7 +1,12 @@
+import type { MainTabKey } from "@/features/app/types/main-tabs.types";
 import type { LucideIcon } from "lucide-react";
-import { MessageCircleMore, Settings, UserRound } from "lucide-react";
-
-export type MainTabKey = "chats" | "settings" | "my-profile";
+import {
+  MessageCircleMore,
+  Settings,
+  UserRound,
+  Search,
+  Users,
+} from "lucide-react";
 
 export type SimpleConfig = {
   icon: LucideIcon;
@@ -12,6 +17,14 @@ const SIMPLE_CONFIGS: Record<MainTabKey, SimpleConfig> = {
   chats: {
     icon: MessageCircleMore,
     title: "Choose a chat ",
+  },
+  contacts: {
+    icon: Users,
+    title: "Choose a contact ",
+  },
+  search: {
+    icon: Search,
+    title: "Search a friend",
   },
   settings: {
     icon: Settings,

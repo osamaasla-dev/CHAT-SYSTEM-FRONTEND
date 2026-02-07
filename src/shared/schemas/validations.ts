@@ -24,3 +24,14 @@ export const passwordSchema = z
   .regex(/[a-z]/, "Must contain a lowercase letter")
   .regex(/[0-9]/, "Must contain a number")
   .regex(/[^A-Za-z0-9]/, "Must contain a special character");
+
+export const usernameSchema = z
+  .string({
+    message: "Username must be a string",
+  })
+  .min(6, {
+    message: "Username must be at least 6 characters long",
+  })
+  .regex(/^[a-zA-Z0-9]+$/, {
+    message: "Username must contain only letters and numbers",
+  });
