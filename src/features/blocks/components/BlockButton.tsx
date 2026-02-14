@@ -1,14 +1,5 @@
-import { useIsMutating } from "@tanstack/react-query";
-
 import { Button } from "@/shared/components";
-import {
-  useCreateBlock,
-  CREATE_BLOCK_MUTATION_KEY,
-} from "../hooks/useCreateBlock";
-import {
-  useUnblockUser,
-  UNBLOCK_USER_MUTATION_KEY,
-} from "../hooks/useUnblockUser";
+import { useBlockButtonLogic } from "../hooks/ui/useBlockButtonLogic";
 
 type BlockButtonProps = {
   blockedUserId: string;
@@ -16,29 +7,10 @@ type BlockButtonProps = {
 };
 
 export const BlockButton = ({ blockedUserId, isBlocked }: BlockButtonProps) => {
-  const { mutate: unblock } = useUnblockUser(blockedUserId);
-  const { mutate: block } = useCreateBlock(blockedUserId);
-
-  const isBlocking =
-    useIsMutating({ mutationKey: CREATE_BLOCK_MUTATION_KEY(blockedUserId) }) >
-    0;
-  const isUnblocking =
-    useIsMutating({ mutationKey: UNBLOCK_USER_MUTATION_KEY(blockedUserId) }) >
-    0;
-
-  const isMutatingForUser = isBlocking || isUnblocking;
-
-  const handleClick = () => {
-    if (isMutatingForUser) return;
-
-    if (isBlocked) {
-      unblock();
-    } else {
-      block();
-    }
-  };
-
-  const label = isBlocked ? "Unblock" : "Block";
+  const { label, isMutatingForUser, handleClick } = useBlockButtonLogic({
+    blockedUserId,
+    isBlocked,
+  });
 
   return (
     <Button

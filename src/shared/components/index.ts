@@ -7,3 +7,4 @@ export * from "./dropdown-menu";
 export * from "./dialog";
 export * from "./confirm-dialog";
 export * from "./switch";
+export * from "./LastSeenLabel";

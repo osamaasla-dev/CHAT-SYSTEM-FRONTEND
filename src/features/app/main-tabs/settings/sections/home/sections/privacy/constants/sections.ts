@@ -30,7 +30,7 @@ export const PrivacySettingsSections: PrivacySettingSection[] = [
 
 export type BooleanSettingField = keyof Pick<
   PrivacySettings,
-  "onlineVisibility" | "lastSeenVisibility" | "readReceiptsVisibility"
+  "presenceVisibility" | "readReceiptsVisibility"
 >;
 
 export const visibilityToggles: Array<{
@@ -39,16 +39,10 @@ export const visibilityToggles: Array<{
   description: string;
 }> = [
   {
-    field: "onlineVisibility",
-    label: "Show online status",
+    field: "presenceVisibility",
+    label: "Show online status and last seen",
     description:
-      "When disabled, you also lose access to everyone else's online state.",
-  },
-  {
-    field: "lastSeenVisibility",
-    label: "Show last seen",
-    description:
-      "When disabled, your last seen is hidden and you can't view others' last seen.",
+      "Controls whether others can see your online status and last seen. When disabled, you also can't see others' presence.",
   },
   {
     field: "readReceiptsVisibility",

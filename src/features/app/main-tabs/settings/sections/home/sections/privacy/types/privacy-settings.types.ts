@@ -2,8 +2,7 @@ export type PrivacyLevel = "ALL" | "CONTACTS" | "ONLY_ME";
 export type PrivacySettings = {
   id: string;
   userId: string;
-  onlineVisibility: boolean;
-  lastSeenVisibility: boolean;
+  presenceVisibility: boolean;
   readReceiptsVisibility: boolean;
   avatarVisibility: PrivacyLevel;
   allowDirectMessages: PrivacyLevel;
@@ -11,8 +10,7 @@ export type PrivacySettings = {
   updatedAt: Date;
 };
 export type UpdatePrivacySettingsInput = {
-  onlineVisibility?: boolean;
-  lastSeenVisibility?: boolean;
+  presenceVisibility?: boolean;
   readReceiptsVisibility?: boolean;
   avatarVisibility?: PrivacyLevel;
   allowDirectMessages?: PrivacyLevel;

@@ -1,16 +1,29 @@
 import { useMemo, useRef } from "react";
 
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
-import { useContacts, type ContactsResponse, type ContactItem } from "@/features/contacts";
+import {
+  useContacts,
+  type ContactsResponse,
+  type ContactItem,
+} from "@/features/contacts";
 
-const DEFAULT_LIMIT = 10;
+const DEFAULT_LIMIT = 5;
 
-export const useContactsList = (limit: number = DEFAULT_LIMIT) => {
-  const query = useContacts({ limit });
+type UseContactsListOptions = {
+  limit?: number;
+  search?: string;
+};
+
+export const useContactsList = ({
+  limit = DEFAULT_LIMIT,
+  search,
+}: UseContactsListOptions = {}) => {
+  const query = useContacts({ limit, search });
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   const items: ContactItem[] = useMemo(
-    () => query.data?.pages.flatMap((page: ContactsResponse) => page.items) ?? [],
+    () =>
+      query.data?.pages.flatMap((page: ContactsResponse) => page.items) ?? [],
     [query.data],
   );
 

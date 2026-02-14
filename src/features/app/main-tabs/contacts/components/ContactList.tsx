@@ -16,7 +16,7 @@ export const ContactList = ({
   hasNextPage,
   isFetchingNextPage,
 }: ContactListProps) => (
-  <section className="overflow-y-auto mt-4 border-t border-secondary">
+  <section className="overflow-y-auto  border-t border-secondary">
     {contacts.map((contact) => (
       <ContactCard key={contact.contactId} contact={contact} />
     ))}

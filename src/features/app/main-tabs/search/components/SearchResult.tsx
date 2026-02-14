@@ -5,12 +5,15 @@ import { resolveApiErrorMessage } from "@/shared/utils";
 import type { ApiErrorResponse } from "@/shared/lib/api";
 import type { SearchUserResult } from "../types/search-user.types";
 import { Avatar, UserNameBlock } from "@/features/profile";
+import { useChatStore } from "@/features/app/stores/chat.store";
 
 type SearchResultProps = {
   searchQuery: UseQueryResult<SearchUserResult, ApiErrorResponse>;
 };
 
 export const SearchResult = ({ searchQuery }: SearchResultProps) => {
+  const openChat = useChatStore((state) => state.openChat);
+
   if (searchQuery.isLoading) {
     return <p className="text-sm text-muted-foreground">Searching…</p>;
   }
@@ -29,10 +32,25 @@ export const SearchResult = ({ searchQuery }: SearchResultProps) => {
 
   const { user, isInMyContacts, isBlockedByMe } = searchQuery.data;
 
+  const handleOpenChat = () => {
+    openChat(user.id);
+  };
+
   return (
-    <article className="cursor-pointer rounded-xl p-3 transition hover:bg-secondary">
+    <article className="rounded-xl p-3 transition hover:bg-secondary">
       <div className="flex flex-col gap-3 ">
-        <div className="flex gap-3">
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={handleOpenChat}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              handleOpenChat();
+            }
+          }}
+          className="flex w-full items-start gap-3 cursor-pointer text-left"
+        >
           <Avatar avatarUrl={user.avatarUrl} name={user.name} />
 
           <UserNameBlock name={user.name} username={user.username} />

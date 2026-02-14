@@ -9,7 +9,11 @@ import {
 import { useContactsList } from "../hooks/ui/useContactsList";
 import { ContactList } from "./ContactList";
 
-export const Contacts = () => {
+type ContactsProps = {
+  search?: string;
+};
+
+export const Contacts = ({ search }: ContactsProps) => {
   const {
     items,
     sentinelRef,
@@ -20,7 +24,7 @@ export const Contacts = () => {
     refetch,
     hasNextPage,
     isFetchingNextPage,
-  } = useContactsList(10);
+  } = useContactsList({ search });
 
   if (isLoading && !isRefetching) {
     return (

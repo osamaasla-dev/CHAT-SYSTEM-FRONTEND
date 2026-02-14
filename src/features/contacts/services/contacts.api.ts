@@ -14,6 +14,10 @@ export const contactsApi = async (params: ContactsQuerySchema = {}) => {
     searchParams.set("cursor", params.cursor);
   }
 
+  if (params.search) {
+    searchParams.set("search", params.search);
+  }
+
   const queryString = searchParams.toString();
   const response = await apiGet<ContactsResponse>(
     `/contacts${queryString ? `?${queryString}` : ""}`,

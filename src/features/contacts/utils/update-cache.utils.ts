@@ -10,7 +10,6 @@ import { CONTACTS_QUERY_KEY } from "@/features/contacts";
 export const updateBlockedContactInContactsCache = (
   queryClient: QueryClient,
   blockedUserId: string,
-  blockedAt: string,
 ) => {
   const previousContacts = queryClient.getQueryData<{
     pageParams: unknown[];
@@ -22,10 +21,8 @@ export const updateBlockedContactInContactsCache = (
   const nextContactPages = previousContacts.pages.map(
     (page: ContactsResponse) => ({
       ...page,
-      items: page.items?.map((contact) =>
-        contact.contactId === blockedUserId
-          ? { ...contact, blockedAt }
-          : contact,
+      items: page.items?.filter(
+        (contact) => contact.contactId !== blockedUserId,
       ),
     }),
   );
@@ -34,39 +31,6 @@ export const updateBlockedContactInContactsCache = (
     ...previousContacts,
     pages: nextContactPages,
   });
-};
-
-/**
- * Clear `blockedAt` for a specific contact in contacts cache after unblocking.
- */
-export const clearBlockedAtInContactsCache = (
-  queryClient: QueryClient,
-  blockedUserId: string,
-) => {
-  const previousContacts = queryClient.getQueryData<{
-    pageParams: unknown[];
-    pages: ContactsResponse[];
-  }>(CONTACTS_QUERY_KEY);
-
-  if (!previousContacts) return;
-
-  const nextContactPages = previousContacts.pages.map(
-    (page: ContactsResponse) => ({
-      ...page,
-      items: page.items?.map((contact) =>
-        contact.contactId === blockedUserId
-          ? { ...contact, blockedAt: null }
-          : contact,
-      ),
-    }),
-  );
-
-  queryClient.setQueryData(CONTACTS_QUERY_KEY, {
-    ...previousContacts,
-    pages: nextContactPages,
-  });
-
-  return previousContacts;
 };
 
 /**

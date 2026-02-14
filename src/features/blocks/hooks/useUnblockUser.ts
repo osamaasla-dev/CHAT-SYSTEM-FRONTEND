@@ -8,7 +8,7 @@ import { BLOCKED_CONTACTS_QUERY_KEY } from "./useBlockedContacts";
 import { BLOCKED_CONTACTS_COUNT_QUERY_KEY } from "./useBlockedContactsCount";
 import { SEARCH_USER_QUERY_KEY } from "@/features/app/main-tabs/search";
 import { updateBlockedContactsCacheAfterUnblock } from "../utils/update-cache.utils";
-import { clearBlockedAtInContactsCache } from "@/features/contacts";
+import { blockEmitters } from "@/features/websocket/emitters/block";
 
 export const UNBLOCK_USER_MUTATION_KEY = (blockedUserId: string) =>
   ["blocks", "unblock", blockedUserId] as const;
@@ -42,7 +42,8 @@ export function useUnblockUser(blockedUserId: string) {
         );
       }
 
-      clearBlockedAtInContactsCache(queryClient, blockedUserId);
+      // Notify backend via WebSocket that this user has been unblocked
+      blockEmitters.unblockUser(blockedUserId);
     },
 
     onError: (error) => {

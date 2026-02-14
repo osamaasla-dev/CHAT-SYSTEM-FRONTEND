@@ -11,6 +11,7 @@ export const contactsQuerySchema = z.object({
     .max(CONTACTS_MAX_LIMIT)
     .optional(),
   cursor: z.string().optional(),
+  search: z.string().optional(),
 });
 
 export type ContactsQuerySchema = z.infer<typeof contactsQuerySchema>;

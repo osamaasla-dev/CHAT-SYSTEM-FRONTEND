@@ -6,7 +6,6 @@ import type { BlockedContactsQuerySchema } from "../schemas/blocked-contacts.sch
 import type { BlockedContactsResponse } from "../types/blocks.types";
 
 const DEFAULT_LIMIT = 20;
-const FIVE_MINUTES = 5 * 60 * 1000;
 
 export const BLOCKED_CONTACTS_QUERY_KEY = [
   "settings",
@@ -24,7 +23,6 @@ export const blockedContactsQueryOptions = (limit: number) => ({
   initialPageParam: undefined,
   getNextPageParam: (lastPage: BlockedContactsResponse) =>
     lastPage.meta.nextCursor ?? undefined,
-  staleTime: FIVE_MINUTES,
 });
 
 type UseBlockedContactsOptions = {

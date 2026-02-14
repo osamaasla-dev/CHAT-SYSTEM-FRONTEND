@@ -1,10 +1,13 @@
 import * as React from "react";
 
 import { cn } from "@/shared/utils";
+import { Search } from "lucide-react";
 
 type InputProps = React.ComponentProps<"input"> & {
   enableValidationStyles?: boolean;
   isValid?: boolean;
+  /** show a search icon inside the input when type="search" */
+  showSearchIcon?: boolean;
 };
 
 function Input({
@@ -12,6 +15,7 @@ function Input({
   type,
   enableValidationStyles = false,
   isValid = true,
+  showSearchIcon = false,
   ...props
 }: InputProps) {
   const validationClass = enableValidationStyles
@@ -20,19 +24,28 @@ function Input({
       : "border-primary/20 focus-visible:ring-primary/20"
     : undefined;
 
+  const withSearchIcon = showSearchIcon && type === "search";
+
   return (
-    <input
-      type={type}
-      data-slot="input"
-      className={cn(
-        "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-        "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
-        "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
-        validationClass,
-        className,
-      )}
-      {...props}
-    />
+    <div className="relative w-full">
+      <input
+        type={type}
+        data-slot="input"
+        className={cn(
+          "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+          "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
+          "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+          withSearchIcon && "pl-9",
+          validationClass,
+          className,
+        )}
+        {...props}
+      />
+
+      {withSearchIcon ? (
+        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+      ) : null}
+    </div>
   );
 }
 
