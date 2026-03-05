@@ -13,6 +13,8 @@ export type SimpleConfig = {
   title: string;
 };
 
+export type { MainTabKey };
+
 const SIMPLE_CONFIGS: Record<MainTabKey, SimpleConfig> = {
   chats: {
     icon: MessageCircleMore,

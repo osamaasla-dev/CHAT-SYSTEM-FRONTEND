@@ -4,10 +4,13 @@ import type { MyProfileInfo } from "../../types";
 import { useChangeAvatar, useDeleteAvatar } from "../../hooks";
 import { useEditableNameForm } from "./useEditableNameForm";
 import { useClipboardCopy } from "./useClipboardCopy";
+import { useMediaUpload } from "@/features/media/hooks/useMediaUpload";
 
 export const useProfileTabController = (data?: MyProfileInfo) => {
-  const { mutate: changeAvatar, isPending: isChangingAvatar } =
+  const { mutate: changeAvatar, isPending: isChangingAvatarMutation } =
     useChangeAvatar();
+  const { mutate: uploadMedia, isPending: isUploadingAvatar } =
+    useMediaUpload();
   const { mutateAsync: deleteAvatar, isPending: isDeletingAvatar } =
     useDeleteAvatar();
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
@@ -29,10 +32,17 @@ export const useProfileTabController = (data?: MyProfileInfo) => {
 
   const handleAvatarUpload = (file: File) => {
     const formData = new FormData();
-    formData.append("avatar", file);
+    // Backend expects multipart/form-data with a single file; use generic field name "file"
+    formData.append("file", file);
 
-    changeAvatar(formData, {
-      onSuccess: closeAvatarModal,
+    uploadMedia(formData, {
+      onSuccess: (result) => {
+        const avatarMediaId = result.mediaId;
+
+        changeAvatar(avatarMediaId, {
+          onSuccess: closeAvatarModal,
+        });
+      },
     });
   };
 
@@ -53,7 +63,7 @@ export const useProfileTabController = (data?: MyProfileInfo) => {
     closeAvatarModal,
     handleAvatarModalChange,
     handleAvatarUpload,
-    isChangingAvatar,
+    isChangingAvatar: isChangingAvatarMutation || isUploadingAvatar,
     handleDeleteAvatar,
     isDeletingAvatar,
   };

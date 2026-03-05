@@ -18,7 +18,7 @@ export const Avatar = ({
   return (
     <div
       className={cn(
-        "flex size-10 items-center justify-center overflow-hidden rounded-full border border-primary-light",
+        "flex size-10 items-center justify-center overflow-hidden rounded-full border border-secondary",
         classNameImg,
       )}
     >

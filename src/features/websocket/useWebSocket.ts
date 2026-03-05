@@ -4,11 +4,20 @@ import { setSocketInstance } from "./socket.instance";
 import { baseListeners } from "./Listeners/base";
 import { blockListeners } from "./Listeners/block";
 import { presenceListeners } from "./Listeners/presence";
+import { messageListeners } from "./Listeners/messages";
 
 const getBackendUrl = () =>
   import.meta.env.VITE_BACKEND_URL ?? "http://localhost:4000";
 
-export const useWebSocket = ({ enabled }: { enabled: boolean }) => {
+type UseWebSocketParams = {
+  enabled: boolean;
+  onForcedDisconnect?: () => void;
+};
+
+export const useWebSocket = ({
+  enabled,
+  onForcedDisconnect,
+}: UseWebSocketParams) => {
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
@@ -20,9 +29,12 @@ export const useWebSocket = ({ enabled }: { enabled: boolean }) => {
       });
 
       // Attach grouped listeners by concern
-      baseListeners.attach(socket);
+      baseListeners.attach(socket, {
+        onForcedDisconnect,
+      });
       blockListeners.attachAll(socket);
       presenceListeners.attachAll(socket);
+      messageListeners.attachAll(socket);
 
       socketRef.current = socket;
       setSocketInstance(socket);
@@ -36,5 +48,5 @@ export const useWebSocket = ({ enabled }: { enabled: boolean }) => {
         socketRef.current = null;
       }
     };
-  }, [enabled]);
+  }, [enabled, onForcedDisconnect]);
 };

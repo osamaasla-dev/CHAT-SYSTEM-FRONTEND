@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { userStatusApi } from "@/features/chat/services/chat.api";
+import { userStatusApi } from "@/features/chats/services/chat.api";
 import { presenceEmitters } from "@/features/websocket";
 
 export type PresenceStatus = "online" | "offline";

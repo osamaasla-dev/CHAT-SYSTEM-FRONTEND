@@ -12,7 +12,7 @@ export const CHANGE_AVATAR_MUTATION_KEY = ["profile", "change-avatar"] as const;
 export function useChangeAvatar() {
   const queryClient = useQueryClient();
 
-  return useMutation<ApiSuccessResponse<void>, ApiErrorResponse, FormData>({
+  return useMutation<ApiSuccessResponse<void>, ApiErrorResponse, string>({
     mutationKey: CHANGE_AVATAR_MUTATION_KEY,
     mutationFn: changeAvatarApi,
     onMutate: () => {

@@ -8,7 +8,7 @@ import { AvatarSection } from "./parts/AvatarSection";
 import { UsernameSection } from "./parts/UsernameSection";
 import { NameSection } from "./parts/NameSection";
 import { EmailSection } from "./parts/EmailSection";
-import { useProfileTabController } from "./hooks/useProfileTabController";
+import { useProfileTabController } from "../hooks";
 
 type MyProfileTabProps = {
   data?: MyProfileInfo;

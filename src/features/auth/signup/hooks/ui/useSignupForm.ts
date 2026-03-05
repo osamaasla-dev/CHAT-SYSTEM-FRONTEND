@@ -21,7 +21,6 @@ export function useSignupForm() {
       name: "",
       email: "",
       password: "",
-      confirmPassword: "",
     },
   });
 

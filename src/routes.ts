@@ -7,7 +7,7 @@ import {
   ResetPasswordPage,
   ResetPasswordInfoPage,
 } from "./features/auth";
-import { AppPage } from "./features/app";
+import { AppPage, ForcedDisconnectPage } from "./features/app";
 import { Test } from "./Test";
 
 export interface RouteContent {
@@ -58,5 +58,10 @@ export const routes: RouteContent[] = [
     key: "/password/reset/info",
     path: "/password/reset/info",
     Element: ResetPasswordInfoPage,
+  },
+  {
+    key: "/forced-disconnect",
+    path: "/forced-disconnect",
+    Element: ForcedDisconnectPage,
   },
 ];

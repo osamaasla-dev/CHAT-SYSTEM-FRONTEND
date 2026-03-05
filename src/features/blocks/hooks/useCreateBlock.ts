@@ -13,12 +13,15 @@ import { BLOCKED_CONTACTS_COUNT_QUERY_KEY } from "./useBlockedContactsCount";
 import { SEARCH_USER_QUERY_KEY } from "@/features/app/main-tabs/search";
 import { updateBlockedContactInContactsCache } from "@/features/contacts";
 import { blockEmitters } from "@/features/websocket/emitters/block";
+import { GET_PRIVATE_CHAT_QUERY_KEY } from "@/features/chats/hooks/useGetPrivateChat";
+import { useChatStore } from "@/features/app/stores/chat.store";
 
 export const CREATE_BLOCK_MUTATION_KEY = (blockedUserId: string) =>
   ["blocks", "create", blockedUserId] as const;
 
 export function useCreateBlock(blockedUserId: string) {
   const queryClient = useQueryClient();
+  const setUserBlocked = useChatStore((state) => state.setUserBlocked);
 
   return useMutation<void, ApiErrorResponse, void>({
     mutationKey: CREATE_BLOCK_MUTATION_KEY(blockedUserId),
@@ -34,9 +37,13 @@ export function useCreateBlock(blockedUserId: string) {
         void queryClient.invalidateQueries({
           queryKey: [SEARCH_USER_QUERY_KEY],
         });
+        void queryClient.invalidateQueries({
+          queryKey: GET_PRIVATE_CHAT_QUERY_KEY(blockedUserId),
+        });
       });
 
       updateBlockedContactInContactsCache(queryClient, blockedUserId);
+      setUserBlocked(blockedUserId, true);
 
       // Notify backend via WebSocket that this user has been blocked
       blockEmitters.blockUser(blockedUserId);

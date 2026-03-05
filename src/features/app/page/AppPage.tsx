@@ -13,6 +13,8 @@ import { ErrorState } from "@/shared/components";
 import { resolveApiErrorMessage } from "@/shared/utils";
 import { useState } from "react";
 import { useWebSocket } from "@/features/websocket";
+import { useNavigate } from "react-router-dom";
+import { useOfflineMessageOutbox } from "@/features/messages";
 import {
   useMyProfile,
   SearchTab,
@@ -26,13 +28,20 @@ import type { MainTabKey } from "../types/main-tabs.types";
 
 export const AppPage = () => {
   const { isPending, error, isSuccess } = useCheckToken();
+  const navigate = useNavigate();
 
   const { data, error: profileError, isLoading } = useMyProfile();
 
   const [selectedTab, setSelectedTab] = useState<MainTabKey>("chats");
 
   // Initialize global websocket connection for the app lifecycle
-  useWebSocket({ enabled: isSuccess });
+  useWebSocket({
+    enabled: isSuccess,
+    onForcedDisconnect: () => {
+      navigate("/forced-disconnect", { replace: true });
+    },
+  });
+  useOfflineMessageOutbox({ enabled: isSuccess });
 
   if (isPending) {
     return <SpinnerLayer />;

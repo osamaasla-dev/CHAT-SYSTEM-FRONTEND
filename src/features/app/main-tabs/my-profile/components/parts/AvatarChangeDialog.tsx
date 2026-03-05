@@ -43,18 +43,18 @@ export const AvatarChangeDialog = ({
     };
   }, [previewUrl]);
 
-  useEffect(() => {
-    if (!open) {
-      resetSelection();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
-
   const resetSelection = () => {
     setSelectedFile(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
+  };
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (!nextOpen) {
+      resetSelection();
+    }
+    onOpenChange(nextOpen);
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,7 +75,7 @@ export const AvatarChangeDialog = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="rounded-3xl border border-primary/10 bg-light p-6 text-primary shadow-2xl">
         <DialogHeader className="text-left">
           <DialogTitle className="text-xl font-semibold text-primary">
@@ -133,7 +133,7 @@ export const AvatarChangeDialog = ({
             type="button"
             variant="secondary"
             size="sm"
-            onClick={() => onOpenChange(false)}
+            onClick={() => handleOpenChange(false)}
             disabled={isUploading}
           >
             Cancel

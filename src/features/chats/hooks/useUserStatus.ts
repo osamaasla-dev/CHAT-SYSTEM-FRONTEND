@@ -10,7 +10,7 @@ const userStatusQueryKey = (userId: string) =>
   [...USER_STATUS_QUERY_KEY, userId] as const;
 
 export const useUserStatus = (userId: string) => {
-  return useQuery<UserState, ApiErrorResponse>({
+  return useQuery<UserState | null, ApiErrorResponse>({
     queryKey: userStatusQueryKey(userId),
     queryFn: () => userStatusApi(userId),
     enabled: Boolean(userId),

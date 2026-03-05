@@ -2,8 +2,7 @@ import { Pencil, UserRound } from "lucide-react";
 
 import { Button, Input } from "@/shared/components";
 import { renderFormErrors } from "@/shared/utils";
-
-import type { EditableNameForm } from "../hooks/useEditableNameForm";
+import type { EditableNameForm } from "../../hooks";
 
 type NameSectionProps = {
   form: EditableNameForm;
@@ -29,7 +28,7 @@ export const NameSection = ({ form }: NameSectionProps) => {
             readOnly={!isEditing}
             disabled={isChangingName}
             enableValidationStyles={true}
-            validationError={!!errors.name}
+            isValid={isValid}
             className={
               !isEditing
                 ? "border-none px-0 text-base font-medium text-primary bg-transparent"

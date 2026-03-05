@@ -9,7 +9,7 @@ export type BlockedContactItem = {
   blockedUserId: string;
   name: string;
   username: string;
-  avatarUrl: string | null;
+  avatarUrl: null;
   status: BlockedContactUserStatus;
   blockedAt: string;
 };

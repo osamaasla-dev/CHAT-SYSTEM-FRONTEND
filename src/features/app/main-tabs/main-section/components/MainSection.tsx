@@ -1,7 +1,7 @@
 import type { MainTabKey } from "@/features/app/types/main-tabs.types";
 import { useChatStore } from "@/features/app/stores/chat.store";
 import { Placeholder } from "../placeholders";
-import { ChatTab } from "@/features/chat";
+import { ChatTab } from "@/features/chats";
 
 type MainSectionProps = {
   tab: MainTabKey;

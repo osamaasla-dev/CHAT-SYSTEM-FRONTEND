@@ -1,4 +1,3 @@
-import { X } from "lucide-react";
 import { useCallback, useState } from "react";
 
 import { Button } from "./button";
@@ -75,7 +74,7 @@ export function ConfirmDialog({
           "border border-secondary bg-white p-5 shadow-lg sm:max-w-sm",
           className,
         )}
-        showCloseButton={false}
+        showCloseButton={!isConfirming}
         data-testid={testId}
       >
         <div className="flex items-start justify-between gap-4">
@@ -89,19 +88,6 @@ export function ConfirmDialog({
               </DialogDescription>
             )}
           </DialogHeader>
-
-          <DialogClose
-            className={cn(
-              "rounded-full p-1 text-muted-foreground transition",
-              isConfirming
-                ? "cursor-not-allowed opacity-50"
-                : "cursor-pointer hover:bg-secondary hover:text-foreground",
-            )}
-            data-testid={`${testId}-close`}
-            disabled={isConfirming}
-          >
-            <X className="size-4" />
-          </DialogClose>
         </div>
 
         <div className="mt-6 flex flex-row-reverse flex-wrap gap-3">
