@@ -1,6 +1,7 @@
 import type { InfiniteData } from "@tanstack/react-query";
 import type { Socket } from "socket.io-client";
 
+import { CHATS_LIST_QUERY_KEY } from "@/features/chats";
 import type {
   ChatMessagesResponse,
   MessageDeletedEventPayload,
@@ -33,6 +34,12 @@ const isChatMessagesQueryObserved = (chatId: string): boolean => {
   return query.getObserversCount() > 0;
 };
 
+const invalidateChatsList = () => {
+  void queryClient.invalidateQueries({
+    queryKey: CHATS_LIST_QUERY_KEY,
+  });
+};
+
 export const messageListeners = {
   newMessage(socket: Socket) {
     socket.on(SOCKET_EVENTS.MESSAGE_NEW, (payload: MessageNewEventPayload) => {
@@ -55,6 +62,8 @@ export const messageListeners = {
             shouldFlagUnreadOnLoad,
           ),
       );
+
+      invalidateChatsList();
     });
   },
 
@@ -66,6 +75,8 @@ export const messageListeners = {
           CHAT_MESSAGES_QUERY_KEY(payload.chatId),
           (current) => applyReceiptUpdateInCache(current, payload),
         );
+
+        invalidateChatsList();
       },
     );
   },
@@ -78,6 +89,8 @@ export const messageListeners = {
           CHAT_MESSAGES_QUERY_KEY(payload.chatId),
           (current) => markMessageAsDeletedInCache(current, payload.messageId),
         );
+
+        invalidateChatsList();
       },
     );
   },
@@ -90,6 +103,8 @@ export const messageListeners = {
           CHAT_MESSAGES_QUERY_KEY(payload.chatId),
           (current) => applyMessageEditedInCache(current, payload),
         );
+
+        invalidateChatsList();
       },
     );
   },

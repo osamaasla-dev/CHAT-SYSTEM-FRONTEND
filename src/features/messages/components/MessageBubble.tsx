@@ -4,6 +4,7 @@ import { EmojiPickerPopover } from "@/shared/components";
 import { useMessageBubbleEditLogic } from "../hooks/ui";
 import { useToggleMessageReaction } from "../hooks/useToggleMessageReaction";
 import type { ChatMessageItem } from "../types/message.types";
+import { isOptimisticMessage } from "../utils/message-state.utils";
 import { MessageBubbleActions } from "./MessageBubbleActions";
 import { MessageBubbleEditForm } from "./MessageBubbleEditForm";
 import { MessageBubbleMeta } from "./MessageBubbleMeta";
@@ -39,10 +40,9 @@ export const MessageBubble = ({ message }: MessageBubbleProps) => {
   const hasReactions = message.reactions.length > 0;
   const canReact =
     !message.isDeleted &&
-    message.localState !== "PENDING" &&
-    !message.id.startsWith("optimistic-");
+    !isOptimisticMessage(message);
 
-  const [, setIsEmojiPickerOpen] = useState(false);
+  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const { mutate: toggleReaction } = useToggleMessageReaction(message.chatId);
 
   const handleEmojiReactionSelect = (emoji: string) => {
@@ -83,18 +83,27 @@ export const MessageBubble = ({ message }: MessageBubbleProps) => {
                 contentType={message.contentType}
                 isOwn={message.isOwn}
                 isDeleted={message.isDeleted}
+                localState={message.localState}
                 onEditRequested={startEditing}
               />
             )}
 
             {showOutsideEmojiPicker && (
-              <EmojiPickerPopover
-                openDirection={message.isOwn ? "right" : "left"}
-                onOpenChange={setIsEmojiPickerOpen}
-                onEmojiSelect={(emoji) => {
-                  handleEmojiReactionSelect(emoji);
-                }}
-              />
+              <div
+                className={`transition-opacity duration-150 ${
+                  isEmojiPickerOpen
+                    ? "pointer-events-auto opacity-100"
+                    : "pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100"
+                }`}
+              >
+                <EmojiPickerPopover
+                  openDirection={message.isOwn ? "right" : "left"}
+                  onOpenChange={setIsEmojiPickerOpen}
+                  onEmojiSelect={(emoji) => {
+                    handleEmojiReactionSelect(emoji);
+                  }}
+                />
+              </div>
             )}
           </div>
         )}

@@ -8,6 +8,7 @@ import {
 import { MoreVertical, Pencil, Trash2 } from "lucide-react";
 
 import { useMessageBubbleActionsLogic } from "../hooks/ui";
+import type { MessageLocalState } from "../types/message.types";
 
 export type MessageBubbleActionsProps = {
   chatId: string;
@@ -16,6 +17,7 @@ export type MessageBubbleActionsProps = {
   contentType: "TEXT" | "IMAGE";
   isOwn: boolean;
   isDeleted: boolean;
+  localState?: MessageLocalState;
   onEditRequested: () => void;
 };
 
@@ -26,6 +28,7 @@ export const MessageBubbleActions = ({
   contentType,
   isOwn,
   isDeleted,
+  localState,
   onEditRequested,
 }: MessageBubbleActionsProps) => {
   const {
@@ -39,10 +42,11 @@ export const MessageBubbleActions = ({
     chatId,
     messageId,
     createdAt,
-    contentType,
-    isOwn,
-    isDeleted,
-  });
+      contentType,
+      isOwn,
+      isDeleted,
+      localState,
+    });
 
   if (!canDeleteMessage && !canEditMessage) {
     return null;

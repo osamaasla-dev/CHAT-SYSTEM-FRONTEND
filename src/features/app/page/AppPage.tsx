@@ -11,10 +11,11 @@ import { SpinnerLayer } from "@/shared/components";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/shared/components";
 import { ErrorState } from "@/shared/components";
 import { resolveApiErrorMessage } from "@/shared/utils";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useWebSocket } from "@/features/websocket";
 import { useNavigate } from "react-router-dom";
 import { useOfflineMessageOutbox } from "@/features/messages";
+import { useNotificationsUnreadCount } from "@/features/notifications";
 import {
   useMyProfile,
   SearchTab,
@@ -31,15 +32,20 @@ export const AppPage = () => {
   const navigate = useNavigate();
 
   const { data, error: profileError, isLoading } = useMyProfile();
+  const { data: unreadNotificationsData } = useNotificationsUnreadCount({
+    enabled: isSuccess,
+  });
 
   const [selectedTab, setSelectedTab] = useState<MainTabKey>("chats");
+  const unreadChatsBadgeCount = unreadNotificationsData?.unreadCount ?? 0;
+  const handleForcedDisconnect = useCallback(() => {
+    navigate("/forced-disconnect", { replace: true });
+  }, [navigate]);
 
   // Initialize global websocket connection for the app lifecycle
   useWebSocket({
     enabled: isSuccess,
-    onForcedDisconnect: () => {
-      navigate("/forced-disconnect", { replace: true });
-    },
+    onForcedDisconnect: handleForcedDisconnect,
   });
   useOfflineMessageOutbox({ enabled: isSuccess });
 
@@ -71,8 +77,13 @@ export const AppPage = () => {
               onClick={() => setSelectedTab("chats")}
               className="cursor-pointer rounded-full hover:bg-light data-[state=active]:bg-light"
             >
-              <span className=" block rounded-full p-2">
+              <span className="relative block rounded-full p-2">
                 <MessageCircleMore className="size-6  text-primary" />
+                {unreadChatsBadgeCount > 0 ? (
+                  <span className="absolute -right-1 -top-1 inline-flex min-w-4 items-center justify-center rounded-full bg-danger px-1 text-[10px] font-semibold text-white">
+                    {unreadChatsBadgeCount > 99 ? "99+" : unreadChatsBadgeCount}
+                  </span>
+                ) : null}
               </span>
             </TabsTrigger>
             <TabsTrigger

@@ -79,7 +79,9 @@ export const EmojiPickerPopover = ({
   }, [open]);
 
   useEffect(() => {
-    if (!open || !pickerContainerRef.current) {
+    const pickerContainer = pickerContainerRef.current;
+
+    if (!open || !pickerContainer) {
       return;
     }
 
@@ -98,13 +100,13 @@ export const EmojiPickerPopover = ({
     });
 
     const pickerElement = picker as unknown as HTMLElement;
-    pickerContainerRef.current.replaceChildren(pickerElement);
+    pickerContainer.replaceChildren(pickerElement);
 
     return () => {
       if (pickerElement.parentNode) {
         pickerElement.parentNode.removeChild(pickerElement);
       }
-      pickerContainerRef.current?.replaceChildren();
+      pickerContainer.replaceChildren();
     };
   }, [onEmojiSelect, open]);
 

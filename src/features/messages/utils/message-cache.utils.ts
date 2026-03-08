@@ -5,6 +5,7 @@ import type {
   ChatMessagesResponse,
   MessageReceiptUpdatePayload,
 } from "../types/message.types";
+import { isOptimisticMessage } from "./message-state.utils";
 
 const OPTIMISTIC_MESSAGE_ID_PREFIX = "optimistic-";
 const MAX_OPTIMISTIC_MATCH_TIME_DIFF_MS = 90_000;
@@ -34,9 +35,6 @@ const hasClientMessageId = (
   message: ChatMessageItem,
 ): message is ChatMessageItem & { clientMessageId: string } =>
   typeof message.clientMessageId === "string" && message.clientMessageId.length > 0;
-
-const isOptimisticMessage = (message: ChatMessageItem): boolean =>
-  message.id.startsWith(OPTIMISTIC_MESSAGE_ID_PREFIX);
 
 const getTimestampMs = (isoDate: string): number | null => {
   const timestamp = new Date(isoDate).getTime();

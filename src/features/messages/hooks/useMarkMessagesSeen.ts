@@ -4,6 +4,7 @@ import {
   type InfiniteData,
 } from "@tanstack/react-query";
 
+import { markChatAsReadInChatsListCache } from "@/features/chats/utils/chat-list-cache.utils";
 import { messageEmitters } from "@/features/websocket";
 import { markChatMessagesSeenApi } from "../services/message.api";
 import type { ChatMessagesResponse } from "../types/message.types";
@@ -40,35 +41,35 @@ export const useMarkMessagesSeen = (chatId: string) => {
       }
     },
     onSuccess: (result) => {
-      if (result.messageIds.length === 0) {
-        return;
+      if (result.messageIds.length > 0) {
+        const seenMessageIds = new Set(result.messageIds);
+
+        queryClient.setQueryData<InfiniteData<ChatMessagesResponse>>(
+          CHAT_MESSAGES_QUERY_KEY(chatId),
+          (current) => {
+            if (!current || current.pages.length === 0) {
+              return current;
+            }
+
+            return {
+              ...current,
+              pages: current.pages.map((page) => ({
+                ...page,
+                items: page.items.map((item) =>
+                  seenMessageIds.has(item.id)
+                    ? {
+                        ...item,
+                        isUnread: false,
+                      }
+                    : item,
+                ),
+              })),
+            };
+          },
+        );
       }
 
-      const seenMessageIds = new Set(result.messageIds);
-
-      queryClient.setQueryData<InfiniteData<ChatMessagesResponse>>(
-        CHAT_MESSAGES_QUERY_KEY(chatId),
-        (current) => {
-          if (!current || current.pages.length === 0) {
-            return current;
-          }
-
-          return {
-            ...current,
-            pages: current.pages.map((page) => ({
-              ...page,
-              items: page.items.map((item) =>
-                seenMessageIds.has(item.id)
-                  ? {
-                      ...item,
-                      isUnread: false,
-                    }
-                  : item,
-              ),
-            })),
-          };
-        },
-      );
+      markChatAsReadInChatsListCache(queryClient, chatId);
     },
   });
 };

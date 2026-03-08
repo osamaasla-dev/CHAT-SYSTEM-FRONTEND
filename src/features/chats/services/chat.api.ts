@@ -1,5 +1,7 @@
 import { apiDelete, apiGet, apiPatch } from "@/shared/lib";
 import type {
+  ChatListFilter,
+  ChatsListResponse,
   MuteChatNotificationsPayload,
   PrivateChatResponse,
   UserState,
@@ -22,6 +24,37 @@ export const getPrivateChatApi = async (otherUserId: string) => {
     `/chats/private/${otherUserId}`,
   );
 
+  return response.data;
+};
+
+export const getChatsApi = async (params: {
+  limit?: number;
+  cursor?: string;
+  search?: string;
+  filter?: ChatListFilter;
+}) => {
+  const searchParams = new URLSearchParams();
+
+  if (params.limit) {
+    searchParams.set("limit", String(params.limit));
+  }
+
+  if (params.cursor) {
+    searchParams.set("cursor", params.cursor);
+  }
+
+  if (params.search?.trim()) {
+    searchParams.set("search", params.search.trim());
+  }
+
+  if (params.filter && params.filter !== "ALL") {
+    searchParams.set("filter", params.filter);
+  }
+
+  const queryString = searchParams.toString();
+  const endpoint = queryString ? `/chats?${queryString}` : "/chats";
+
+  const response = await apiGet<ChatsListResponse>(endpoint);
   return response.data;
 };
 

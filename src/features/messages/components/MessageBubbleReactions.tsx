@@ -1,6 +1,3 @@
-import { useState } from "react";
-import { EmojiPickerPopover } from "@/shared/components";
-
 import { useMessageBubbleReactionsLogic } from "../hooks/ui";
 import type { MessageReactionItem } from "../types/message.types";
 import { MessageReactionsDetailsPopover } from "./MessageReactionsDetailsPopover";
@@ -11,7 +8,6 @@ type MessageBubbleReactionsProps = {
   reactions: MessageReactionItem[];
   canReact: boolean;
   isOwn: boolean;
-  showInlinePicker?: boolean;
 };
 
 export const MessageBubbleReactions = ({
@@ -20,7 +16,6 @@ export const MessageBubbleReactions = ({
   reactions,
   canReact,
   isOwn,
-  showInlinePicker = false,
 }: MessageBubbleReactionsProps) => {
   const {
     anchorRef,
@@ -36,27 +31,26 @@ export const MessageBubbleReactions = ({
     messageId,
     canReact,
   });
-  const [isInlinePickerOpen, setIsInlinePickerOpen] = useState(false);
 
   const totalReactionsCount = reactions.reduce(
     (sum, reaction) => sum + reaction.count,
     0,
   );
   const hasReactions = reactions.length > 0;
-  const displayedEmojis = reactions.slice(0, 4).map((reaction) => reaction.emoji);
+  const displayedEmojis = reactions
+    .slice(0, 4)
+    .map((reaction) => reaction.emoji);
   const hasMoreEmojis = reactions.length > displayedEmojis.length;
   const reactedByMe = reactions.some((reaction) => reaction.reactedByMe);
 
-  const shouldRenderInlinePicker = showInlinePicker && canReact;
-
-  if (!hasReactions && !shouldRenderInlinePicker) {
+  if (!hasReactions) {
     return null;
   }
 
   return (
     <div
       ref={anchorRef}
-      className={`relative flex flex-wrap items-center gap-1 ${
+      className={`relative flex flex-wrap items-center ${
         hasReactions ? "-mb-2 mt-0.5" : "mt-1"
       }`}
     >
@@ -77,25 +71,12 @@ export const MessageBubbleReactions = ({
             {displayedEmojis.map((emoji, index) => (
               <span key={`${emoji}-${index}`}>{emoji}</span>
             ))}
-            {hasMoreEmojis ? (
+            {hasMoreEmojis && (
               <span className="text-[11px] text-muted-foreground">...</span>
-            ) : null}
+            )}
           </span>
         </button>
       )}
-
-      {shouldRenderInlinePicker ? (
-        <div
-          className={`transition-opacity duration-150 ${
-            isInlinePickerOpen ? "opacity-100" : "opacity-90"
-          }`}
-        >
-          <EmojiPickerPopover
-            onOpenChange={setIsInlinePickerOpen}
-            onEmojiSelect={handleToggleReaction}
-          />
-        </div>
-      ) : null}
 
       <MessageReactionsDetailsPopover
         popoverRef={popoverRef}

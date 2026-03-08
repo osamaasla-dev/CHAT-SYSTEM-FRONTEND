@@ -4,6 +4,8 @@ import {
   MESSAGE_DELETE_WINDOW_MS,
   MESSAGE_EDIT_WINDOW_MS,
 } from "../../constants/message.constants";
+import type { MessageLocalState } from "../../types/message.types";
+import { isPendingMessageState } from "../../utils/message-state.utils";
 import { useDeleteMessage } from "../useDeleteMessage";
 
 export type UseMessageBubbleActionsLogicParams = {
@@ -13,6 +15,7 @@ export type UseMessageBubbleActionsLogicParams = {
   contentType: "TEXT" | "IMAGE";
   isOwn: boolean;
   isDeleted: boolean;
+  localState?: MessageLocalState;
 };
 
 export const useMessageBubbleActionsLogic = ({
@@ -22,6 +25,7 @@ export const useMessageBubbleActionsLogic = ({
   contentType,
   isOwn,
   isDeleted,
+  localState,
 }: UseMessageBubbleActionsLogicParams) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [currentTimeMs, setCurrentTimeMs] = useState<number>(() => Date.now());
@@ -51,25 +55,22 @@ export const useMessageBubbleActionsLogic = ({
       !isOwn ||
       isDeleted ||
       deleteWindowEndsAtMs === null ||
-      messageId.startsWith("optimistic-")
+      isPendingMessageState(localState)
     ) {
       return false;
     }
 
     return currentTimeMs <= deleteWindowEndsAtMs;
-  }, [currentTimeMs, deleteWindowEndsAtMs, isDeleted, isOwn, messageId]);
+  }, [currentTimeMs, deleteWindowEndsAtMs, isDeleted, isOwn, localState]);
 
   const canEditMessage = useMemo(() => {
     if (
       !isOwn ||
       isDeleted ||
       contentType !== "TEXT" ||
-      editWindowEndsAtMs === null
+      editWindowEndsAtMs === null ||
+      isPendingMessageState(localState)
     ) {
-      return false;
-    }
-
-    if (messageId.startsWith("optimistic-")) {
       return false;
     }
 
@@ -80,7 +81,7 @@ export const useMessageBubbleActionsLogic = ({
     editWindowEndsAtMs,
     isDeleted,
     isOwn,
-    messageId,
+    localState,
   ]);
 
   useEffect(() => {

@@ -5,6 +5,7 @@ import { baseListeners } from "./Listeners/base";
 import { blockListeners } from "./Listeners/block";
 import { presenceListeners } from "./Listeners/presence";
 import { messageListeners } from "./Listeners/messages";
+import { notificationListeners } from "./Listeners/notifications";
 
 const getBackendUrl = () =>
   import.meta.env.VITE_BACKEND_URL ?? "http://localhost:4000";
@@ -35,6 +36,7 @@ export const useWebSocket = ({
       blockListeners.attachAll(socket);
       presenceListeners.attachAll(socket);
       messageListeners.attachAll(socket);
+      notificationListeners.attachAll(socket);
 
       socketRef.current = socket;
       setSocketInstance(socket);
