@@ -9,6 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/shared/components";
+import { toSafeImageUrl } from "@/shared/utils";
 
 type AvatarSectionProps = {
   name: string;
@@ -28,12 +29,13 @@ export const AvatarSection = ({
   isDeletingAvatar = false,
 }: AvatarSectionProps) => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const safeAvatarUrl = toSafeImageUrl(avatarUrl);
 
   return (
     <li className="flex flex-col items-center gap-4 text-center">
       <div className="flex size-32 items-center justify-center overflow-hidden rounded-full border-4 border-primary-light">
-        {avatarUrl ? (
-          <img src={avatarUrl} alt={name} className="size-full object-cover" />
+        {safeAvatarUrl ? (
+          <img src={safeAvatarUrl} alt={name} className="size-full object-cover" />
         ) : (
           <UserRound className="size-25 text-gray-light self-end" />
         )}
@@ -64,7 +66,7 @@ export const AvatarSection = ({
           <DropdownMenuItem
             onClick={() => setIsConfirmOpen(true)}
             className="cursor-pointer"
-            disabled={!avatarUrl || isDeletingAvatar}
+            disabled={!safeAvatarUrl || isDeletingAvatar}
           >
             Delete Avatar
           </DropdownMenuItem>

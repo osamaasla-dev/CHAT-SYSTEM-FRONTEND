@@ -64,4 +64,8 @@ export const messageOutboxRepository = {
     const oldestRecord = await this.getOldestQueued();
     return oldestRecord?.nextRetryAt ?? null;
   },
+
+  async clearAll(): Promise<void> {
+    await messageOutboxDb.outbox.clear();
+  },
 };

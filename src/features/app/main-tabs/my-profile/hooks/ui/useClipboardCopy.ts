@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { devError } from "@/shared/utils";
 
 export const useClipboardCopy = (resetDelay = 2000) => {
   const [isCopied, setIsCopied] = useState(false);
@@ -14,7 +15,7 @@ export const useClipboardCopy = (resetDelay = 2000) => {
       setTimeout(() => setIsCopied(false), resetDelay);
       return true;
     } catch (error) {
-      console.error(error);
+      devError("Clipboard write failed", error);
       return false;
     }
   }, [resetDelay]);

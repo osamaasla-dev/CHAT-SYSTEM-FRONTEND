@@ -5,7 +5,7 @@ import type { ApiErrorResponse, ApiSuccessResponse } from "@/shared/lib/api";
 import type { GoogleLoginResponse } from "../types";
 import { googleLoginApi } from "../services";
 import { googleMessages } from "../messages";
-import { resolveApiErrorMessage } from "@/shared/utils";
+import { resolveApiErrorMessage, toSafeHttpUrl } from "@/shared/utils";
 
 export const GOOGLE_LOGIN_MUTATION_KEY = ["auth", "google-login"] as const;
 
@@ -20,9 +20,13 @@ export function useGoogleLogin() {
       },
       onSuccess: (response) => {
         toast.dismiss();
-        if (response.data.authorizationUrl) {
-          window.location.href = response.data.authorizationUrl;
+        const safeAuthorizationUrl = toSafeHttpUrl(response.data.authorizationUrl);
+        if (safeAuthorizationUrl) {
+          window.location.assign(safeAuthorizationUrl);
+          return;
         }
+
+        toast.error(googleMessages.FAILED);
       },
       onError: (error) => {
         const message = resolveApiErrorMessage(error.message, googleMessages);

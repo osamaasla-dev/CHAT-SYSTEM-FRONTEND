@@ -23,14 +23,13 @@ export const ChatsList = ({
         <ChatsListItem key={item.id} chatItem={item} />
       ))}
 
-      {hasNextPage ? <div ref={sentinelRef} className="h-1 w-full" /> : null}
+      {hasNextPage && <div ref={sentinelRef} className="h-1 w-full" />}
 
-      {isFetchingNextPage ? (
+      {isFetchingNextPage && (
         <div className="flex items-center justify-center py-3 text-muted-foreground">
           <Loader2 className="size-4 animate-spin" />
         </div>
-      ) : null}
+      )}
     </div>
   );
 };
-

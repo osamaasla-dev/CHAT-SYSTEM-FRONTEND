@@ -53,6 +53,16 @@ class MessageOutboxRuntime {
     }
   }
 
+  async clearQueue(): Promise<void> {
+    if (this.nextRetryTimer !== null) {
+      window.clearTimeout(this.nextRetryTimer);
+      this.nextRetryTimer = null;
+    }
+
+    this.isRunning = false;
+    await messageOutboxRepository.clearAll();
+  }
+
   private async processDueMessages(): Promise<void> {
     while (!isBrowserOffline()) {
       const oldestQueuedMessage = await messageOutboxRepository.getOldestQueued();

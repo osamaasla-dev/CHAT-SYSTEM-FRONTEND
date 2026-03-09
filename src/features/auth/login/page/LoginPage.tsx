@@ -5,5 +5,13 @@ import { SpinnerLayer } from "@/shared/components";
 export const LoginPage = () => {
   const { isPending, isError } = useCheckToken();
 
-  return isPending ? <SpinnerLayer /> : isError && <LoginLayout />;
+  if (isPending) {
+    return <SpinnerLayer />;
+  }
+
+  if (isError) {
+    return <LoginLayout />;
+  }
+
+  return null;
 };

@@ -1,1 +1,1 @@
-export { MainSection, UserProfile } from "./components";
+export { MainSection } from "./components";

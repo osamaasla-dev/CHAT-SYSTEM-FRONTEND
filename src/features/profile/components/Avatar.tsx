@@ -1,6 +1,7 @@
 import { UserRound } from "lucide-react";
 
 import { cn } from "@/shared/utils";
+import { toSafeImageUrl } from "@/shared/utils";
 
 type AvatarProps = {
   avatarUrl: string | null;
@@ -15,6 +16,8 @@ export const Avatar = ({
   classNameImg,
   classNameIcon,
 }: AvatarProps) => {
+  const safeAvatarUrl = toSafeImageUrl(avatarUrl);
+
   return (
     <div
       className={cn(
@@ -22,8 +25,8 @@ export const Avatar = ({
         classNameImg,
       )}
     >
-      {avatarUrl ? (
-        <img src={avatarUrl} alt={name} className="size-full object-cover" />
+      {safeAvatarUrl ? (
+        <img src={safeAvatarUrl} alt={name} className="size-full object-cover" />
       ) : (
         <UserRound
           className={cn("size-8 self-end text-gray-light", classNameIcon)}

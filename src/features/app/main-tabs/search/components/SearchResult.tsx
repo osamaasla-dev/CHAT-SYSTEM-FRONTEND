@@ -1,11 +1,10 @@
 import type { UseQueryResult } from "@tanstack/react-query";
-import { BlockButton } from "@/features/blocks";
-import { ContactButton } from "@/features/contacts";
-import { resolveApiErrorMessage } from "@/shared/utils";
+
 import type { ApiErrorResponse } from "@/shared/lib/api";
-import type { SearchUserResult } from "../types/search-user.types";
-import { Avatar, UserNameBlock } from "@/features/profile";
+import { resolveApiErrorMessage } from "@/shared/utils";
 import { useChatStore } from "@/features/app/stores/chat.store";
+import type { SearchUserResult } from "../types/search-user.types";
+import { SearchResultCard } from "./SearchResultCard";
 
 type SearchResultProps = {
   searchQuery: UseQueryResult<SearchUserResult, ApiErrorResponse>;
@@ -15,7 +14,7 @@ export const SearchResult = ({ searchQuery }: SearchResultProps) => {
   const openChat = useChatStore((state) => state.openChat);
 
   if (searchQuery.isLoading) {
-    return <p className="text-sm text-muted-foreground">Searching…</p>;
+    return <p className="text-sm text-muted-foreground">Searching...</p>;
   }
 
   if (searchQuery.isError) {
@@ -32,36 +31,15 @@ export const SearchResult = ({ searchQuery }: SearchResultProps) => {
 
   const { user, isInMyContacts, isBlockedByMe } = searchQuery.data;
 
-  const handleOpenChat = () => {
-    openChat(user.id);
-  };
-
   return (
-    <article className="rounded-xl p-3 transition hover:bg-secondary">
-      <div className="flex flex-col gap-3 ">
-        <div
-          role="button"
-          tabIndex={0}
-          onClick={handleOpenChat}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" || event.key === " ") {
-              event.preventDefault();
-              handleOpenChat();
-            }
-          }}
-          className="flex w-full items-start gap-3 cursor-pointer text-left"
-        >
-          <Avatar avatarUrl={user.avatarUrl} name={user.name} />
-
-          <UserNameBlock name={user.name} username={user.username} />
-        </div>
-
-        <div className=" flex justify-center flex-wrap gap-2">
-          <ContactButton contactId={user.id} isInContacts={isInMyContacts} />
-
-          <BlockButton blockedUserId={user.id} isBlocked={isBlockedByMe} />
-        </div>
-      </div>
-    </article>
+    <SearchResultCard
+      user={user}
+      isInMyContacts={isInMyContacts}
+      isBlockedByMe={isBlockedByMe}
+      onOpenChat={() => {
+        openChat(user.id);
+      }}
+    />
   );
 };
+

@@ -3,10 +3,21 @@ import axios, {
   type AxiosInstance,
   type AxiosRequestConfig,
 } from "axios";
+import { getBackendHttpUrl } from "./backend-url";
 
-const baseURL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
-const refreshEndpoint =
-  import.meta.env.VITE_REFRESH_ENDPOINT || "/auth/refresh";
+const baseURL = getBackendHttpUrl();
+const normalizeRefreshEndpoint = (value: string | undefined): string => {
+  const normalized = value?.trim();
+  if (!normalized || !normalized.startsWith("/")) {
+    return "/auth/refresh";
+  }
+
+  return normalized;
+};
+
+const refreshEndpoint = normalizeRefreshEndpoint(
+  import.meta.env.VITE_REFRESH_ENDPOINT,
+);
 
 type CustomAxiosRequestConfig = AxiosRequestConfig & {
   _retry?: boolean;
@@ -22,6 +33,8 @@ const instance: AxiosInstance = axios.create({
   baseURL,
   timeout: 10000, // 10 seconds
   withCredentials: true,
+  xsrfCookieName: "XSRF-TOKEN",
+  xsrfHeaderName: "X-XSRF-TOKEN",
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -32,6 +45,8 @@ const refreshClient = axios.create({
   baseURL,
   timeout: 10000,
   withCredentials: true,
+  xsrfCookieName: "XSRF-TOKEN",
+  xsrfHeaderName: "X-XSRF-TOKEN",
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",

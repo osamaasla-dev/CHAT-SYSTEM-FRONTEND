@@ -59,7 +59,6 @@ export function LoginFormCard({ className }: LoginFormCardProps) {
             disabled={isForgotPending}
             onClick={() => {
               const email = getValues("email");
-              console.log(email);
               if (!email) {
                 toast.error("Please enter your email");
                 return;

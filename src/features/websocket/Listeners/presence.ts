@@ -1,7 +1,8 @@
 import type { Socket } from "socket.io-client";
 
-import { SOCKET_EVENTS } from "../events";
 import { usePresenceStore } from "@/features/app/stores/presence.store";
+import { devLog } from "@/shared/utils";
+import { SOCKET_EVENTS } from "../events";
 
 export const presenceListeners = {
   update: (socket: Socket) => {
@@ -12,8 +13,7 @@ export const presenceListeners = {
         status: "online" | "offline";
         timestamp: string;
       }) => {
-        // logic خاص بالبريزينس
-        console.log("[socket] Chat presence update", data.userId, data.status);
+        devLog("[socket] Chat presence update", data.userId, data.status);
 
         const { updatePresence } = usePresenceStore.getState();
         updatePresence(data.userId, data.status, data.timestamp);

@@ -26,7 +26,7 @@ export const ChatTab = ({ userId, onClose }: ChatTabProps) => {
   if (isChatLoading || !privateChat) return null;
   const otherUserName = privateChat.otherUser.name ?? "Chat";
   const otherUserAvatar = privateChat.otherUser.avatarUrl ?? null;
-  console.log(unreadBoundaryMessageId);
+
   return (
     <div className="flex h-full w-full flex-col bg-linear-to-br from-light via-primary-light to-light">
       <ChatHeader

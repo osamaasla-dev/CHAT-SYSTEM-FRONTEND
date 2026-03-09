@@ -9,7 +9,7 @@ export const MfaPage = () => {
   const navigate = useNavigate();
   useEffect(() => {
     if (!location.state?.fromLogin) {
-      navigate("/login");
+      navigate("/login", { replace: true });
     }
   }, [location, navigate]);
   return location.state?.fromLogin ? <MfaLayout /> : <SpinnerLayer />;

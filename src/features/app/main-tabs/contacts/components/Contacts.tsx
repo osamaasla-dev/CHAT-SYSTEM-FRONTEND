@@ -30,7 +30,7 @@ export const Contacts = ({ search }: ContactsProps) => {
     return (
       <LoadingState
         className="min-h-[200px] rounded-xl border border-secondary/40 bg-white"
-        label="Fetching your contacts…"
+        label="Fetching your contacts..."
         scope="parent"
       />
     );
@@ -49,13 +49,14 @@ export const Contacts = ({ search }: ContactsProps) => {
     );
   }
 
-  if (!items.length)
+  if (!items.length) {
     return (
       <EmptyState
-        message="You don’t have any contacts yet."
+        message="You don't have any contacts yet."
         className="rounded-xl border border-dashed border-secondary/40 bg-white p-6 text-center"
       />
     );
+  }
 
   return (
     <ContactList
@@ -66,3 +67,4 @@ export const Contacts = ({ search }: ContactsProps) => {
     />
   );
 };
+

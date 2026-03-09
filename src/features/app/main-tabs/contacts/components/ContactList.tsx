@@ -2,6 +2,7 @@ import type { RefObject } from "react";
 
 import type { ContactItem } from "@/features/contacts";
 import { ContactCard } from "./ContactCard";
+import { ContactListFooter } from "./ContactListFooter";
 
 type ContactListProps = {
   contacts: ContactItem[];
@@ -16,20 +17,16 @@ export const ContactList = ({
   hasNextPage,
   isFetchingNextPage,
 }: ContactListProps) => (
-  <section className="overflow-y-auto  border-t border-secondary">
+  <section className="overflow-y-auto border-t border-secondary">
     {contacts.map((contact) => (
       <ContactCard key={contact.contactId} contact={contact} />
     ))}
 
     <div ref={sentinelRef} />
-    {hasNextPage ? (
-      <p className="text-center text-xs text-muted-foreground">
-        {isFetchingNextPage ? "Loading more…" : "Scroll to load more"}
-      </p>
-    ) : (
-      <p className="text-center text-xs text-muted-foreground">
-        You’ve reached the end of the list.
-      </p>
-    )}
+    <ContactListFooter
+      hasNextPage={hasNextPage}
+      isFetchingNextPage={isFetchingNextPage}
+    />
   </section>
 );
+

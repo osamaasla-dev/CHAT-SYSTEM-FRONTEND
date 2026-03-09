@@ -17,7 +17,7 @@ export function VerifyEmailStatus() {
   useEffect(() => {
     if (!status) return;
     if (status === "SUCCESS") {
-      navigate("/login");
+      navigate("/login", { replace: true });
     }
   }, [status, navigate]);
   return (

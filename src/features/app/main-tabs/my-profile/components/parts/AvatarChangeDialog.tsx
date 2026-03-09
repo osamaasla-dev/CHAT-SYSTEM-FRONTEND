@@ -11,6 +11,9 @@ import {
   DialogTitle,
 } from "@/shared/components";
 
+const MAX_AVATAR_FILE_SIZE_BYTES = 5 * 1024 * 1024;
+const DISALLOWED_AVATAR_MIME_TYPES = new Set(["image/svg+xml"]);
+
 type AvatarChangeDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -26,6 +29,7 @@ export const AvatarChangeDialog = ({
 }: AvatarChangeDialogProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   const previewUrl = useMemo(() => {
     if (!selectedFile) {
@@ -45,6 +49,14 @@ export const AvatarChangeDialog = ({
 
   const resetSelection = () => {
     setSelectedFile(null);
+    setValidationError(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const clearInvalidSelection = () => {
+    setSelectedFile(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -63,6 +75,25 @@ export const AvatarChangeDialog = ({
       return;
     }
 
+    if (!file.type.startsWith("image/")) {
+      setValidationError("Please select a valid image file.");
+      clearInvalidSelection();
+      return;
+    }
+
+    if (DISALLOWED_AVATAR_MIME_TYPES.has(file.type)) {
+      setValidationError("SVG images are not allowed for security reasons.");
+      clearInvalidSelection();
+      return;
+    }
+
+    if (file.size > MAX_AVATAR_FILE_SIZE_BYTES) {
+      setValidationError("Image size must be 5 MB or less.");
+      clearInvalidSelection();
+      return;
+    }
+
+    setValidationError(null);
     setSelectedFile(file);
   };
 
@@ -127,6 +158,10 @@ export const AvatarChangeDialog = ({
             {selectedFile.name}
           </p>
         ) : null}
+
+        {validationError && (
+          <p className="mt-2 text-xs text-danger">{validationError}</p>
+        )}
 
         <DialogFooter className="mt-6 flex-row justify-end gap-3">
           <Button

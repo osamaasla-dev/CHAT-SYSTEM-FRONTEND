@@ -4,6 +4,7 @@ import { logoutApi } from "../services";
 import { resolveApiErrorMessage } from "@/shared/utils";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { clearClientSessionState } from "@/features/auth/session";
 
 export const LOGOUT_SETTINGS_MUTATION_KEY = ["settings", "logout"] as const;
 
@@ -12,8 +13,12 @@ export function useLogout() {
   return useMutation<ApiSuccessResponse<void>, ApiErrorResponse, void>({
     mutationKey: LOGOUT_SETTINGS_MUTATION_KEY,
     mutationFn: logoutApi,
-    onSuccess: () => {
-      navigate("/login");
+    onSuccess: async () => {
+      try {
+        await clearClientSessionState();
+      } finally {
+        navigate("/login", { replace: true });
+      }
     },
     onError: (error) => {
       const message = resolveApiErrorMessage(error.message);

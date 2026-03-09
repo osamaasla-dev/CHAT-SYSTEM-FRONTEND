@@ -18,12 +18,18 @@ export interface RouteContent {
   children?: RouteContent[];
 }
 
+const developmentOnlyRoutes: RouteContent[] = import.meta.env.DEV
+  ? [
+      {
+        key: "/test",
+        path: "/test",
+        Element: Test,
+      },
+    ]
+  : [];
+
 export const routes: RouteContent[] = [
-  {
-    key: "/test",
-    path: "/test",
-    Element: Test,
-  },
+  ...developmentOnlyRoutes,
   {
     key: "/",
     path: "/",

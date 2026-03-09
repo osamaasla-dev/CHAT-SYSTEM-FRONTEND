@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import type { ApiErrorResponse, ApiSuccessResponse } from "@/shared/lib/api";
 import { tokenIntrospectApi } from "../services/token.api";
 import type { TokenIntrospectionResponse } from "../types/token.types";
+import { clearClientSessionState } from "@/features/auth/session";
 
 export const TOKEN_INTROSPECTION_MUTATION_KEY = [
   "auth",
@@ -27,7 +28,9 @@ export function useToken() {
     },
     onError: (error) => {
       if (error.statusCode === 401) {
-        navigate("/login", { replace: true });
+        void clearClientSessionState().finally(() => {
+          navigate("/login", { replace: true });
+        });
       }
     },
   });

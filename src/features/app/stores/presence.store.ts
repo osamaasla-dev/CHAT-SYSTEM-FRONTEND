@@ -2,6 +2,7 @@ import { create } from "zustand";
 
 import { userStatusApi } from "@/features/chats/services/chat.api";
 import { presenceEmitters } from "@/features/websocket";
+import { devError } from "@/shared/utils";
 
 export type PresenceStatus = "online" | "offline";
 
@@ -73,7 +74,7 @@ export const usePresenceStore = create<PresenceStoreState>((set, get) => ({
       }));
     } catch (error) {
       // Non-fatal: realtime socket events will still update presence
-      console.log("Failed to fetch initial user status", error);
+      devError("Failed to fetch initial user status", error);
     }
   },
   startPresence: async (userId: string) => {

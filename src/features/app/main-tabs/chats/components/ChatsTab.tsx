@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import type { ChatListFilter } from "@/features/chats";
-import { SearchInput, useSearchController } from "@/features/search";
+import { useSearchController } from "@/features/search";
 import {
   Button,
   EmptyState,
@@ -11,11 +11,7 @@ import {
 import { resolveApiErrorMessage } from "@/shared/utils";
 import { useChatsTabList } from "../hooks/ui/useChatsTabList";
 import { ChatsList } from "./ChatsList";
-
-const FILTER_OPTIONS: { value: ChatListFilter; label: string }[] = [
-  { value: "ALL", label: "All" },
-  { value: "UNREAD", label: "Unread" },
-];
+import { ChatsTabHeader } from "./ChatsTabHeader";
 
 export const ChatsTab = () => {
   const [filter, setFilter] = useState<ChatListFilter>("ALL");
@@ -65,43 +61,12 @@ export const ChatsTab = () => {
 
   return (
     <div className="flex flex-1 flex-col gap-4 overflow-y-auto">
-      <div className="space-y-3">
-        <div>
-          <h1 className="text-xl font-semibold text-primary-dark">Chats</h1>
-          <p className="text-sm text-muted-foreground">
-            Start or continue your conversations.
-          </p>
-        </div>
-
-        <SearchInput
-          value={value}
-          onChange={handleChange}
-          placeholder="Search chats by name or username"
-        />
-
-        <div className="flex items-center gap-2">
-          {FILTER_OPTIONS.map((option) => {
-            const isActiveFilter = option.value === filter;
-
-            return (
-              <button
-                key={option.value}
-                type="button"
-                onClick={() => {
-                  setFilter(option.value);
-                }}
-                className={`cursor-pointer rounded-full border px-3 py-1.5 text-sm transition ${
-                  isActiveFilter
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-gray-light bg-white text-primary-dark hover:bg-secondary"
-                }`}
-              >
-                {option.label}
-              </button>
-            );
-          })}
-        </div>
-      </div>
+      <ChatsTabHeader
+        searchValue={value}
+        onSearchChange={handleChange}
+        filter={filter}
+        onFilterChange={setFilter}
+      />
 
       {items.length === 0 ? (
         <EmptyState
@@ -123,4 +88,3 @@ export const ChatsTab = () => {
     </div>
   );
 };
-

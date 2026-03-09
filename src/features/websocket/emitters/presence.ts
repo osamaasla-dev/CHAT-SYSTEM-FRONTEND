@@ -1,5 +1,6 @@
 import { getSocketInstance } from "../socket.instance";
 import { SOCKET_EVENTS } from "../events";
+import { devLog } from "@/shared/utils";
 
 export const presenceEmitters = {
   subscribe: (userId: string) => {
@@ -11,10 +12,10 @@ export const presenceEmitters = {
       { userId },
       (res: { status: "success" | "error"; message?: string }) => {
         if (res.status === "success") {
-          console.log("Presence subscribed successfully");
+          devLog("Presence subscribed successfully");
         }
         if (res.status === "error") {
-          console.log("Presence subscribe failed", res.message);
+          devLog("Presence subscribe failed", res.message);
         }
       },
     );
@@ -29,7 +30,7 @@ export const presenceEmitters = {
       { userId },
       (res: { status: string }) => {
         if (res.status === "success") {
-          console.log("Presence unsubscribed successfully");
+          devLog("Presence unsubscribed successfully");
         }
       },
     );
