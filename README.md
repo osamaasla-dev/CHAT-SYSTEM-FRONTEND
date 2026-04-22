@@ -1,73 +1,86 @@
-# React + TypeScript + Vite
+# Realtime Chat Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React SPA for a chat and social experience with auth, chats, messages, contacts, blocks, profile/settings, and realtime presence.
 
-Currently, two official plugins are available:
+## Stack
+- React 19 + TypeScript (strict) + Vite
+- Routing: react-router-dom
+- Server state: @tanstack/react-query
+- Client state: zustand (chat/presence)
+- Forms: react-hook-form + zod
+- HTTP: axios via shared wrappers
+- UI: Tailwind CSS v4, Radix primitives, shadcn-style components
+- Realtime: socket.io-client
+- Notifications: react-hot-toast
+- Offline outbox: Dexie
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Architecture Rules
+- `shared/*` is the base layer for generic utilities, UI primitives, and HTTP wrappers.
+- `features/*` contains business/domain modules.
+- Do not call raw axios inside features. Use `src/shared/lib/axios.ts` and `src/shared/lib/api.ts`.
+- Success response contract: `{ status: "success", data, message? }`
+- Error response contract: `{ status: "error", statusCode, message }`
+- Socket lifecycle initialized once via `useWebSocket({ enabled })`.
+- Events centralized in `features/websocket/events.ts`.
+- Listeners and emitters grouped by concern.
 
-## React Compiler
+## Entry Points
+- `src/main.tsx`: global providers (router, React Query, Toaster).
+- `src/App.tsx`: route rendering.
+- `src/routes.ts`: route table and route typing.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Feature Layout (Preferred)
+- `components/`, `hooks/`, `hooks/ui/`, `services/`, `schemas/`, `types/`, `messages/`, `constants/`, `index.ts`.
 
-## Expanding the ESLint configuration
+## Project Structure
+- `src/` application code
+- `src/shared/` generic UI and utilities
+- `src/features/` domain modules
+- `src/routes.ts` route table
+- `src/index.css` design tokens and Tailwind theme
+- `public/` static assets
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## `src/` Architecture
+- `shared/` design system, utilities, API wrappers
+- `features/auth/` login, signup, MFA, reset, verify, Google OAuth
+- `features/app/` app shell, tabs, settings navigation
+- `features/chats/` chat list and conversation views
+- `features/messages/` message timeline, composer, offline outbox
+- `features/notifications/` unread count and state sync
+- `features/contacts/` contacts management
+- `features/blocks/` block/unblock flows
+- `features/profile/` profile data and updates
+- `features/search/` user search
+- `features/media/` media upload and previews
+- `features/websocket/` socket lifecycle, events, listeners, emitters
+- `routes.ts` route table and typing
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Realtime Flow
+- Socket is initialized once via `useWebSocket({ enabled })` inside the app shell.
+- Events are centralized in `features/websocket/events.ts`.
+- Listeners are grouped by concern in `features/websocket/listeners/*`.
+- Emitters live in `features/websocket/emitters/*`.
+- Realtime updates feed zustand stores and React Query cache where needed.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Environment Variables
+- `VITE_BACKEND_URL` (default: http://localhost:4000)
+- `VITE_REFRESH_ENDPOINT` (default: /auth/refresh)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Local Setup
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Scripts
+- `npm run dev`
+- `npm run build`
+- `npm run lint`
+- `npm run preview`
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Stabilization Status
+Frontend hardening and regression status are tracked in `FRONTEND_STABILIZATION_CHECKLIST.md`.
+Architecture rules and conventions live in `AI_PROJECT_CONTEXT.md`.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Notes
+- There is no automated test suite yet; lint and build are the current gate.
